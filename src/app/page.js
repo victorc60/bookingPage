@@ -1,55 +1,79 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [contactInfo, setContactInfo] = useState("");
+  const [message, setMessage] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Отправка данных на API route
+    const response = await fetch("/api/bookLesson", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contactInfo }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setMessage("Lesson booked successfully!");
+    } else {
+      setMessage("Something went wrong, please try again.");
+    }
+  };
+  return (
+    <div className="h-screen  box-border px-10 ">
+      <header className="bg-[#eeee]  flex justify-start gap-40">
+        <a href="#">Learn English </a>
+        <ul className="flex gap-20">
+          <li>
+            <a href="#home">Home</a>
+          </li>
+          <li>
+            <a href="#contact">Contact</a>
+          </li>
+          <li>
+            <a href="#shedule">Shedule</a>
+          </li>
+        </ul>
+      </header>
+      <main className="flex mt-20 items-center justify-center gap-20">
+        <div className="flex flex-col w-[650px] gap-10 ">
+          <h1 className="text-5xl font-semibold">
+            Unlock Your English Potential. Learn with Me and Speak with
+            Confidence!
+          </h1>
+          <div className="conteiner_book-input">
+            <form className="container_book-input" onSubmit={handleSubmit}>
+              <p>Your email or phone</p>
+              <input
+                type="text"
+                value={contactInfo}
+                onChange={(e) => setContactInfo(e.target.value)}
+                className="w-[200px] p-2"
+              />
+              <button type="submit" className="ml-2 p-2 bg-blue-500 text-white">
+                Book a lesson!
+              </button>
+            </form>
+          </div>
+          <p>Join over 100 people who have already unlocked their potential!</p>
+        </div>
+        <div className="w-[500px] h-[400px] overflow-hidden rounded-md shadow-lg shadow-cyan-500/50">
+          <img
+            className=" object-contain"
+            src="https://files.oaiusercontent.com/file-WKqq2JNMYLYVKPeHzQTbJrDD?se=2024-10-04T14%3A55%3A03Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D09467272-276c-4314-bba0-02f728b0ebea.webp&sig=wUAj606UHNnqGdnvxugzRrBbbdnKXi/v6ZZBVILprbQ%3D"
+            alt=""
+          />
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+      {/* <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
@@ -95,7 +119,7 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }
